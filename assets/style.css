@@ -1,0 +1,50 @@
+/* Estilo geral da sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 16rem;
+    padding: 2rem 1rem;
+    background-color: #f8f9fa;
+}
+
+/* Estilo dos links da sidebar */
+.sidebar .nav-link {
+    color: #40E0D0; /* Verde turquesa para texto normal */
+    border-radius: 10px;
+}
+
+/* Hover nos links */
+.sidebar .nav-link:hover {
+    background-color: rgba(64, 224, 208, 0.2);
+    color: #40E0D0;
+}
+
+/* Link ativo (selecionado) */
+.sidebar .nav-link.active {
+    background-color: #40E0D0 !important;
+    color: white !important;
+    border-radius: 10px;
+}
+
+/* Ajuste para inputs */
+input {
+    margin-bottom: 8px;
+}
+
+/* Ajuste visual dos cards */
+.card {
+    margin-bottom: 8px;
+}
+
+/* Remover excesso de espaço da coluna de filtros */
+.filter-panel {
+    padding-right: 8px;
+    margin-right: 8px;
+}
+
+/* Ajuste geral */
+body {
+    background-color: #ffffff;
+}
