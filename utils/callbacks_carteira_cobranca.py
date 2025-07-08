@@ -6,6 +6,59 @@ import plotly.express as px
 
 from app import app
 
+# Função para gerar dados fictícios da aba Resultado
+def generate_resultado_data():
+    meses = pd.date_range('2024-05', periods=13, freq='M')
+    receita = [100000, 120000, 110000, 130000, 125000, 140000, 135000, 150000, 145000, 155000, 160000, 165000, 170000]
+    despesas = [60000, 70000, 65000, 80000, 75000, 85000, 80000, 90000, 85000, 95000, 100000, 105000, 110000]
+    resultado_liquido = [r - d for r, d in zip(receita, despesas)]
+    pizza_labels = ['Liquidação', 'Emissão', 'Protesto']
+    pizza_values = [80000, 60000, 30000]
+    return {
+        'meses': meses,
+        'receita': receita,
+        'despesas': despesas,
+        'resultado_liquido': resultado_liquido,
+        'pizza_labels': pizza_labels,
+        'pizza_values': pizza_values
+    }
+
+# Callback dos gráficos da aba Resultado
+@app.callback(
+    Output('grafico-barra-receita', 'figure'),
+    Output('grafico-barra-despesas', 'figure'),
+    Output('grafico-linha-resultado-liquido', 'figure'),
+    Output('grafico-pizza-receita-tipo', 'figure'),
+    Input('input-pa-resultado', 'value'),
+    Input('input-ano-mes-resultado', 'value'),
+    Input('input-modalidade-resultado', 'value')
+)
+def update_resultado_graficos(pa, ano_mes, modalidade):
+    data = generate_resultado_data()
+    fig_receita = go.Figure()
+    fig_receita.add_trace(go.Bar(x=data['meses'], y=data['receita'], name='Receita', marker_color='green'))
+    fig_receita.update_layout(title='Receita por Mês', xaxis_title='Mês', yaxis_title='Valor (R$)')
+
+    fig_despesas = go.Figure()
+    fig_despesas.add_trace(go.Bar(x=data['meses'], y=data['despesas'], name='Despesas', marker_color='red'))
+    fig_despesas.update_layout(title='Despesas por Mês', xaxis_title='Mês', yaxis_title='Valor (R$)')
+
+    fig_resultado = go.Figure()
+    fig_resultado.add_trace(go.Scatter(x=data['meses'], y=data['resultado_liquido'], mode='lines+markers', name='Resultado Líquido', line=dict(color='blue')))
+    fig_resultado.update_layout(title='Resultado Líquido', xaxis_title='Mês', yaxis_title='Valor (R$)')
+
+    fig_pizza = go.Figure(data=[go.Pie(labels=data['pizza_labels'], values=data['pizza_values'], hole=0.4)])
+    fig_pizza.update_layout(title='Receita por Tipo')
+
+    return fig_receita, fig_despesas, fig_resultado, fig_pizza
+from dash.dependencies import Input, Output
+from dash import html, dcc, dash_table
+import pandas as pd
+import plotly.graph_objects as go
+import plotly.express as px
+
+from app import app
+
 # Função para gerar dados de exemplo para a tabela principal
 def generate_table_data():
     data = {

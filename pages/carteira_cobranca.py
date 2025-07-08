@@ -262,8 +262,73 @@ layout = html.Div([
             dbc.Tab(html.P(liquidacao_layout), label="Liquidação", tab_id="aba-2",
                     label_style={"color": "#00A091"}, active_label_style={"color": "#00A091", "fontWeight": "bold"}),
 
-            dbc.Tab(html.P("Aba 3 aberta!"), label="Resultado", tab_id="aba-3",
-                    label_style={"color": "#00A091"}, active_label_style={"color": "#00A091", "fontWeight": "bold"}),
+            dbc.Tab(
+                html.Div([
+                    dbc.Row([
+                        dbc.Col([
+                            dbc.Card([
+                                dbc.CardHeader("Filtros"),
+                                dbc.CardBody([
+                                    html.Div([
+                                        dbc.Label("PA"),
+                                        dbc.Input(id="input-pa-resultado", type="text", placeholder="PA"),
+                                    ]),
+                                    html.Div([
+                                        dbc.Label("Ano/mês"),
+                                        dbc.Input(id="input-ano-mes-resultado", type="text", placeholder="Ano/mês"),
+                                    ]),
+                                    html.Div([
+                                        dbc.Label("Modalidade"),
+                                        dbc.Input(id="input-modalidade-resultado", type="text", placeholder="Modalidade"),
+                                    ]),
+                                ])
+                            ]),
+                        ], width=3),
+                        dbc.Col([
+                            dbc.Row([
+                                dbc.Col([
+                                    dbc.Card([
+                                        dbc.CardBody([
+                                            html.H5("Receita por Mês"),
+                                            dcc.Graph(id="grafico-barra-receita"),
+                                        ])
+                                    ])
+                                ], width=6),
+                                dbc.Col([
+                                    dbc.Card([
+                                        dbc.CardBody([
+                                            html.H5("Despesas por Mês"),
+                                            dcc.Graph(id="grafico-barra-despesas"),
+                                        ])
+                                    ])
+                                ], width=6),
+                            ]),
+                            dbc.Row([
+                                dbc.Col([
+                                    dbc.Card([
+                                        dbc.CardBody([
+                                            html.H5("Resultado Líquido"),
+                                            dcc.Graph(id="grafico-linha-resultado-liquido"),
+                                        ])
+                                    ])
+                                ], width=6),
+                                dbc.Col([
+                                    dbc.Card([
+                                        dbc.CardBody([
+                                            html.H5("Receita por Tipo"),
+                                            dcc.Graph(id="grafico-pizza-receita-tipo"),
+                                        ])
+                                    ])
+                                ], width=6),
+                            ]),
+                        ], width=9),
+                    ]),
+                ]),
+                label="Resultado",
+                tab_id="aba-3",
+                label_style={"color": "#00A091"},
+                active_label_style={"color": "#00A091", "fontWeight": "bold"}
+            ),
 
             dbc.Tab(html.P("Aba 4 aberta!"), label="Ranking", tab_id="aba-4",
                     label_style={"color": "#00A091"}, active_label_style={"color": "#00A091", "fontWeight": "bold"}),
