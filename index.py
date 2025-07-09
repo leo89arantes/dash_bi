@@ -1,8 +1,7 @@
 from dash import dcc, html, Input, Output
 from app import app
 from components.sidebar import sidebar
-from utils import callbacks_share_mercado, callbacks_carteira_cobranca    # 🔥 Importa e ativa os callbacks
-
+from utils import callbacks_share_mercado, callbacks_carteira_cobranca 
 from pages import home, monitoramento_rpa, share_mercado, carteira_cartao, carteira_cobranca, carteira_credito, carteira_seguros, carteira_sipag, carteira_consorcio, carteira_previdencia, carteira_depositos, carteira_orcamento
 
 app.layout = html.Div([

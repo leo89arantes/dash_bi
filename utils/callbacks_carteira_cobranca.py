@@ -3,59 +3,7 @@ from dash import html, dcc, dash_table
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
-
-from app import app
-
-# Função para gerar dados fictícios da aba Resultado
-def generate_resultado_data():
-    meses = pd.date_range('2024-05', periods=13, freq='M')
-    receita = [100000, 120000, 110000, 130000, 125000, 140000, 135000, 150000, 145000, 155000, 160000, 165000, 170000]
-    despesas = [60000, 70000, 65000, 80000, 75000, 85000, 80000, 90000, 85000, 95000, 100000, 105000, 110000]
-    resultado_liquido = [r - d for r, d in zip(receita, despesas)]
-    pizza_labels = ['Liquidação', 'Emissão', 'Protesto']
-    pizza_values = [80000, 60000, 30000]
-    return {
-        'meses': meses,
-        'receita': receita,
-        'despesas': despesas,
-        'resultado_liquido': resultado_liquido,
-        'pizza_labels': pizza_labels,
-        'pizza_values': pizza_values
-    }
-
-# Callback dos gráficos da aba Resultado
-@app.callback(
-    Output('grafico-barra-receita', 'figure'),
-    Output('grafico-barra-despesas', 'figure'),
-    Output('grafico-linha-resultado-liquido', 'figure'),
-    Output('grafico-pizza-receita-tipo', 'figure'),
-    Input('input-pa-resultado', 'value'),
-    Input('input-ano-mes-resultado', 'value'),
-    Input('input-modalidade-resultado', 'value')
-)
-def update_resultado_graficos(pa, ano_mes, modalidade):
-    data = generate_resultado_data()
-    fig_receita = go.Figure()
-    fig_receita.add_trace(go.Bar(x=data['meses'], y=data['receita'], name='Receita', marker_color='green'))
-    fig_receita.update_layout(title='Receita por Mês', xaxis_title='Mês', yaxis_title='Valor (R$)')
-
-    fig_despesas = go.Figure()
-    fig_despesas.add_trace(go.Bar(x=data['meses'], y=data['despesas'], name='Despesas', marker_color='red'))
-    fig_despesas.update_layout(title='Despesas por Mês', xaxis_title='Mês', yaxis_title='Valor (R$)')
-
-    fig_resultado = go.Figure()
-    fig_resultado.add_trace(go.Scatter(x=data['meses'], y=data['resultado_liquido'], mode='lines+markers', name='Resultado Líquido', line=dict(color='blue')))
-    fig_resultado.update_layout(title='Resultado Líquido', xaxis_title='Mês', yaxis_title='Valor (R$)')
-
-    fig_pizza = go.Figure(data=[go.Pie(labels=data['pizza_labels'], values=data['pizza_values'], hole=0.4)])
-    fig_pizza.update_layout(title='Receita por Tipo')
-
-    return fig_receita, fig_despesas, fig_resultado, fig_pizza
-from dash.dependencies import Input, Output
-from dash import html, dcc, dash_table
-import pandas as pd
-import plotly.graph_objects as go
-import plotly.express as px
+import numpy as np
 
 from app import app
 
@@ -152,6 +100,27 @@ def generate_liquidacao_graph_data():
     })
     return df_qtd, df_valor
 
+def generate_resultado_data():
+    # Datas dos últimos 12 meses
+    datas = pd.date_range(end=pd.Timestamp.today(), periods=12, freq='M')
+    receita = np.random.randint(80000, 120000, size=12)
+    despesa = np.random.randint(50000, 90000, size=12)
+    resultado = receita - despesa
+    df = pd.DataFrame({
+        'Data': datas.strftime('%Y-%m'),
+        'Receita': receita,
+        'Despesa': despesa,
+        'Resultado': resultado
+    })
+    # Variação Mensal (MoM)
+    df['Receita_MoM'] = df['Receita'].pct_change().fillna(0) * 100
+    df['Despesa_MoM'] = df['Despesa'].pct_change().fillna(0) * 100
+    # Variação Anual (YoY)
+    df['Receita_YoY'] = df['Receita'].pct_change(periods=12).fillna(0) * 100
+    df['Despesa_YoY'] = df['Despesa'].pct_change(periods=12).fillna(0) * 100
+    return df
+
+# Callbacks para a aba Resultado
 @app.callback(
     Output('tabela-cobranca', 'children'),
     Input('input-pa', 'value'),
@@ -313,3 +282,119 @@ def update_liquidacao_bar_charts(pa, ano_mes, modalidade):
     fig_valor_bar.update_layout(barmode='stack')
 
     return fig_qtd_bar, fig_valor_bar
+
+@app.callback(
+    Output('grafico-receita-12m', 'figure'),
+    Input('tabs', 'active_tab')
+)
+def update_grafico_receita_12m(active_tab):
+    if active_tab != 'aba-3':
+        return go.Figure()
+    df = generate_resultado_data()
+    fig = px.bar(df, x='Data', y='Receita', title='Receita dos últimos 12 meses', labels={'Receita': 'Receita (R$)'})
+    fig.update_layout(xaxis_title='Mês', yaxis_title='Receita (R$)')
+    return fig
+
+@app.callback(
+    Output('grafico-despesa-12m', 'figure'),
+    Input('tabs', 'active_tab')
+)
+def update_grafico_despesa_12m(active_tab):
+    if active_tab != 'aba-3':
+        return go.Figure()
+    df = generate_resultado_data()
+    fig = px.bar(df, x='Data', y='Despesa', title='Despesa dos últimos 12 meses', labels={'Despesa': 'Despesa (R$)'}, color_discrete_sequence=['#d9534f'])
+    fig.update_layout(xaxis_title='Mês', yaxis_title='Despesa (R$)')
+    return fig
+
+@app.callback(
+    Output('grafico-resultado-12m', 'figure'),
+    Input('tabs', 'active_tab')
+)
+def update_grafico_resultado_12m(active_tab):
+    if active_tab != 'aba-3':
+        return go.Figure()
+    df = generate_resultado_data()
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=df['Data'], y=df['Resultado'], mode='lines+markers', name='Resultado', line=dict(color='green')))
+    fig.update_layout(title='Resultado dos últimos 12 meses', xaxis_title='Mês', yaxis_title='Resultado (R$)')
+    return fig
+
+@app.callback(
+    Output('tabela-evolucao-receita-despesa', 'children'),
+    Input('tabs', 'active_tab')
+)
+def update_tabela_evolucao_receita_despesa(active_tab):
+    if active_tab != 'aba-3':
+        return html.Div()
+    df = generate_resultado_data()
+    # Formatar variações
+    df['Receita_MoM'] = df['Receita_MoM'].map(lambda x: f"{x:.1f}%")
+    df['Despesa_MoM'] = df['Despesa_MoM'].map(lambda x: f"{x:.1f}%")
+    df['Receita_YoY'] = df['Receita_YoY'].map(lambda x: f"{x:.1f}%")
+    df['Despesa_YoY'] = df['Despesa_YoY'].map(lambda x: f"{x:.1f}%")
+    return dash_table.DataTable(
+        columns=[{"name": i, "id": i} for i in df.columns],
+        data=df.to_dict('records'),
+        style_table={'overflowX': 'auto'},
+        style_cell={'textAlign': 'center', 'padding': '5px'},
+        style_header={'backgroundColor': 'rgb(230, 230, 230)', 'fontWeight': 'bold'}
+    )
+
+def get_ranking_contrato_ativo():
+    data = [
+        ["PA16", 1626, 265, 16.2977], ["PA26", 1325, 165, 12.4528], ["PA19", 1124, 135, 12.0107], ["PA47", 1652, 198, 11.9855],
+        ["PA18", 1265, 135, 10.6719], ["PA10", 1465, 132, 9.0102], ["PA24", 1623, 135, 8.3179], ["PA14", 1652, 126, 7.6271],
+        ["PA22", 1362, 98, 7.1953], ["PA27", 4659, 298, 6.3962], ["PA15", 2642, 165, 6.2453], ["PA23", 2123, 132, 6.2176],
+        ["PA21", 4652, 269, 5.7825], ["PA28", 3265, 174, 5.3292], ["PA8", 3262, 162, 4.9663], ["PA17", 3566, 165, 4.6270],
+        ["PA11", 2969, 135, 4.5470], ["PA20", 5623, 250, 4.4460], ["PA25", 3652, 135, 3.6966], ["PA9", 4685, 168, 3.5859],
+        ["PA2", 2653, 95, 3.5809], ["PA1", 3526, 88, 2.4957], ["PA97", 6595, 126, 1.9105], ["PA7", 3111, 55, 1.7679],
+        ["PA5", 3265, 56, 1.7152], ["PA4", 2645, 43, 1.6257], ["PA3", 3652, 26, 0.7119], ["PA6", 3795, 26, 0.6851]
+    ]
+    df = pd.DataFrame(data, columns=["PA", "Cooperados", "Contatos ativos", "Proveitamento"])
+    return df
+
+def get_ranking_boletos():
+    data = [
+        ["PA6", 26, 646226, 2485484.6154], ["PA5", 56, 38465, 68687.5], ["PA3", 26, 15476, 59523.0769], ["PA7", 55, 29849, 54270.9091],
+        ["PA1", 88, 26546, 30165.9091], ["PA2", 95, 26544, 27941.0526], ["PA15", 165, 38465, 23312.1212], ["PA11", 135, 29849, 22110.3704],
+        ["PA14", 126, 26546, 21068.254], ["PA24", 135, 26544, 19662.2222], ["PA18", 135, 26541, 19660.0], ["PA19", 135, 26456, 19597.037],
+        ["PA8", 162, 26546, 16386.4198], ["PA20", 250, 38465, 15386.0], ["PA28", 174, 26544, 15255.1724], ["PA4", 43, 4685, 10895.3488],
+        ["PA27", 298, 29849, 10016.443], ["PA9", 168, 15476, 9211.9048], ["PA16", 265, 23415, 8835.8491], ["PA21", 269, 15476, 5753.1599],
+        ["PA23", 132, 4685, 3549.2424], ["PA25", 135, 4685, 3470.3704], ["PA22", 98, 2984, 3044.898], ["PA97", 126, 2984, 2368.254],
+        ["PA10", 132, 2654, 2010.6061], ["PA17", 165, 2984, 1808.4848], ["PA26", 165, 2356, 1427.8788], ["PA47", 198, 2654, 1340.404]
+    ]
+    df = pd.DataFrame(data, columns=["PA", "Contatos ativos", "Emissão", "Proveitamento"])
+    return df
+
+@app.callback(
+    Output('tabela-ranking-contrato-ativo', 'children'),
+    Input('tabs', 'active_tab')
+)
+def update_tabela_ranking_contrato_ativo(active_tab):
+    if active_tab != 'aba-4':
+        return html.Div()
+    df = get_ranking_contrato_ativo()
+    return dash_table.DataTable(
+        columns=[{"name": i, "id": i} for i in df.columns],
+        data=df.to_dict('records'),
+        style_table={'overflowX': 'auto'},
+        style_cell={'textAlign': 'center', 'padding': '5px'},
+        style_header={'backgroundColor': 'rgb(230, 230, 230)', 'fontWeight': 'bold'}
+    )
+
+@app.callback(
+    Output('tabela-ranking-boletos', 'children'),
+    Input('tabs', 'active_tab')
+)
+def update_tabela_ranking_boletos(active_tab):
+    if active_tab != 'aba-4':
+        return html.Div()
+    df = get_ranking_boletos()
+    return dash_table.DataTable(
+        columns=[{"name": i, "id": i} for i in df.columns],
+        data=df.to_dict('records'),
+        style_table={'overflowX': 'auto'},
+        style_cell={'textAlign': 'center', 'padding': '5px'},
+        style_header={'backgroundColor': 'rgb(230, 230, 230)', 'fontWeight': 'bold'}
+    )
