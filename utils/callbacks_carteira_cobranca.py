@@ -222,11 +222,26 @@ def update_mortalidade_chart(pa, ano_mes, modalidade):
 def update_donut_charts(pa, ano_mes, modalidade):
     data = generate_donut_data()
 
-    fig_qtd = go.Figure(data=[go.Pie(labels=['Emitidos', 'Liquidado'], values=[data['qtd_emitidos'], data['qtd_liquidado']], hole=.7)])
-    fig_qtd.update_layout(margin=dict(l=0, r=0, t=0, b=0), showlegend=False)
 
-    fig_valor = go.Figure(data=[go.Pie(labels=['Emitido', 'Liquidado'], values=[data['valor_emitido'], data['valor_liquidado']], hole=.7)])
-    fig_valor.update_layout(margin=dict(l=0, r=0, t=0, b=0), showlegend=False)
+    fig_qtd = go.Figure(data=[go.Pie(
+        labels=['Emitidos', 'Liquidado'],
+        values=[data['qtd_emitidos'], data['qtd_liquidado']],
+        hole=.3,
+        marker=dict(colors=['#002D40', '#7DB61C']),
+        showlegend=False,
+        textinfo='none'  # Remove labels internos
+    )])
+    fig_qtd.update_layout(margin=dict(l=5, r=5, t=5, b=5), showlegend=False)
+
+    fig_valor = go.Figure(data=[go.Pie(
+        labels=['Emitido', 'Liquidado'],
+        values=[data['valor_emitido'], data['valor_liquidado']],
+        hole=.3,
+        marker=dict(colors=['#002D40', '#7DB61C']),
+        showlegend=False,
+        textinfo='none'  # Remove labels internos
+    )])
+    fig_valor.update_layout(margin=dict(l=5, r=5, t=5, b=5), showlegend=False)
 
     return fig_qtd, fig_valor
 
@@ -236,16 +251,16 @@ def update_donut_charts(pa, ano_mes, modalidade):
     Input('input-ano-mes', 'value'),
     Input('input-modalidade', 'value')
 )
-def update_metas_table(pa, ano_mes, modalidade):
-    df_metas = generate_metas_data()
-    return dash_table.DataTable(
-        id='metas-table',
-        columns=[{"name": i, "id": i} for i in df_metas.columns],
-        data=df_metas.to_dict('records'),
-        style_table={'overflowX': 'auto'},
-        style_cell={'textAlign': 'left', 'padding': '5px'},
-        style_header={'backgroundColor': 'rgb(230, 230, 230)', 'fontWeight': 'bold'}
-    )
+# def update_metas_table(pa, ano_mes, modalidade):
+#     df_metas = generate_metas_data()
+#     return dash_table.DataTable(
+#         id='metas-table',
+#         columns=[{"name": i, "id": i} for i in df_metas.columns],
+#         data=df_metas.to_dict('records'),
+#         style_table={'overflowX': 'auto'},
+#         style_cell={'textAlign': 'left', 'padding': '5px'},
+#         style_header={'backgroundColor': 'rgb(230, 230, 230)', 'fontWeight': 'bold'}
+#     )
 
 @app.callback(
     Output('grafico-rosca-qtd-liq', 'figure'),
@@ -257,10 +272,23 @@ def update_metas_table(pa, ano_mes, modalidade):
 def update_liquidacao_donut_charts(pa, ano_mes, modalidade):
     data = generate_liquidacao_data()
 
-    fig_qtd_liq = go.Figure(data=[go.Pie(labels=['Cooperativa', 'Rede Externa', 'Sicoob'], values=[data['liq_cooperativa'], data['liq_rede_externa'], data['liq_sicoob']], hole=.7)])
+
+    fig_qtd_liq = go.Figure(data=[go.Pie(
+        labels=['Cooperativa', 'Rede Externa', 'Sicoob'],
+        values=[data['liq_cooperativa'], data['liq_rede_externa'], data['liq_sicoob']],
+        hole=.7,
+        showlegend=False,
+        textinfo='none'  # Remove labels internos
+    )])
     fig_qtd_liq.update_layout(margin=dict(l=0, r=0, t=0, b=0), showlegend=False)
 
-    fig_valor_liq = go.Figure(data=[go.Pie(labels=['Emitido', 'Liquidado'], values=[data['valor_emitido_mes'], data['valor_liquidado_mes']], hole=.7)])
+    fig_valor_liq = go.Figure(data=[go.Pie(
+        labels=['Emitido', 'Liquidado'],
+        values=[data['valor_emitido_mes'], data['valor_liquidado_mes']],
+        hole=.7,
+        showlegend=False,
+        textinfo='none'  # Remove labels internos
+    )])
     fig_valor_liq.update_layout(margin=dict(l=0, r=0, t=0, b=0), showlegend=False)
 
     return fig_qtd_liq, fig_valor_liq

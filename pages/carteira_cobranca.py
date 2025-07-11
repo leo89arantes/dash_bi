@@ -4,124 +4,101 @@ import dash_bootstrap_components as dbc
 
 register_page(__name__, path="/carteira-cobranca", name="Cobrança")
 
-# Layout da aba Base
 base_layout = html.Div([
+
+    # Linha dos cards centralizados e maiores
     dbc.Row([
         dbc.Col([
-            dbc.Card([
-                dbc.CardHeader("Filtros"),
-                dbc.CardBody([
-                    html.Div([
-                        dbc.Label("PA"),
-                        dbc.Input(id="input-pa", type="text", placeholder="PA"),
-                    ]),
-                    html.Div([
-                        dbc.Label("Ano/mês"),
-                        dbc.Input(id="input-ano-mes", type="text", placeholder="Ano/mês"),
-                    ]),
-                    html.Div([
-                        dbc.Label("Modalidade"),
-                        dbc.Input(id="input-modalidade", type="text", placeholder="Modalidade"),
-                    ]),
-                ])
-            ]),
-            html.Br(),
-            dbc.Card([
-                dbc.CardHeader("Metas"),
-                dbc.CardBody([
-                    html.Div(id="tabela-metas"),
-                ])
-            ]),
-        ], width=3),
+            html.Div([
+                dbc.Card([
+                    html.Div(style={
+                        "position": "absolute",
+                        "left": 0,
+                        "top": 0,
+                        "bottom": 0,
+                        "width": "16px",
+                        "backgroundColor": "#C9D200",
+                        "borderTopLeftRadius": "12px",
+                        "borderBottomLeftRadius": "12px"
+                    }),
+                    dbc.CardBody([
+                        html.Div([
+                            dcc.Graph(id="grafico-rosca-qtd", style={
+                                "width": "220px",
+                                "height": "220px",
+                                "margin": "0 auto",
+                                "display": "block"
+                            }, config={"displayModeBar": False}),
+                            html.Div([
+                                html.Div([
+                                    html.H4("137.453", className="card-title mb-0", style={"fontWeight": "bold", "textAlign": "center"}),
+                                    html.P("Qtd Emitidos no Mês", className="card-text", style={"fontSize": "16px", "textAlign": "center", "marginBottom": "0"})
+                                ], style={"flex": 1}),
+                                html.Div([
+                                    html.H4("117.720", className="card-title mb-0", style={"fontWeight": "bold", "textAlign": "center"}),
+                                    html.P("Qtd Liquidado no Mês", className="card-text", style={"fontSize": "16px", "textAlign": "center", "marginBottom": "0"})
+                                ], style={"flex": 1})
+                            ], style={"display": "flex", "justifyContent": "space-around", "marginTop": "10px"})
+                        ], style={"display": "flex", "flexDirection": "column", "alignItems": "center", "position": "relative"}),
+                    ])
+                ], style={
+                    "boxShadow": "0 4px 16px 0 rgba(0,0,0,0.15)",
+                    "borderRadius": "12px",
+                    "position": "relative",
+                    "overflow": "hidden",
+                    "width": "100%",
+                    "maxWidth": "600px",
+                    "height": "340px",
+                    "margin": "0 auto"
+                })
+            ], style={"display": "flex", "justifyContent": "center"})
+        ], width=6),
         dbc.Col([
-            dbc.Row([
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardBody([
+            html.Div([
+                dbc.Card([
+                    html.Div(style={
+                        "position": "absolute",
+                        "left": 0,
+                        "top": 0,
+                        "bottom": 0,
+                        "width": "16px",
+                        "backgroundColor": "#C9D200",
+                        "borderTopLeftRadius": "12px",
+                        "borderBottomLeftRadius": "12px"
+                    }),
+                    dbc.CardBody([
+                        html.Div([
+                            dcc.Graph(id="grafico-rosca-valor", style={
+                                "width": "220px",
+                                "height": "220px",
+                                "margin": "0 auto",
+                                "display": "block"
+                            }, config={"displayModeBar": False}),
                             html.Div([
                                 html.Div([
-                                    html.H4("137.453", className="card-title"),
-                                    html.P("Qtd Emitidos no Mês", className="card-text"),
-                                    html.H5("117.720", className="card-title"),
-                                    html.P("Qtd Liquidado no Mês", className="card-text"),
-                                ], className="me-3"),
-                                dcc.Graph(id="grafico-rosca-qtd", style={
-                                    "width": "100px",
-                                    "height": "100px",
-                                    "margin-left": "auto",
-                                    "margin-right": "auto",
-                                    "display": "block"
-                                })
-                            ], className="d-flex align-items-center"),
-                        ])
-                    ])
-                ], width=6),
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardBody([
-                            html.Div([
+                                    html.H4("R$161.131.535", className="card-title mb-0", style={"fontWeight": "bold", "textAlign": "center"}),
+                                    html.P("Valor Emitido no Mês", className="card-text", style={"fontSize": "16px", "textAlign": "center", "marginBottom": "0"})
+                                ], style={"flex": 1}),
                                 html.Div([
-                                    html.H4("R$161.131.535", className="card-title"),
-                                    html.P("Valor Emitido no Mês", className="card-text"),
-                                    html.H5("R$135.343.686", className="card-title"),
-                                    html.P("Valor Liquidado no Mês", className="card-text"),
-                                ], className="me-3"),
-                                dcc.Graph(id="grafico-rosca-valor", style={
-                                    "width": "100px",
-                                    "height": "100px",
-                                    "margin-left": "auto",
-                                    "margin-right": "auto",
-                                    "display": "block"
-                                })
-                            ], className="d-flex align-items-center"),
-                        ])
+                                    html.H4("R$135.343.686", className="card-title mb-0", style={"fontWeight": "bold", "textAlign": "center"}),
+                                    html.P("Valor Liquidado no Mês", className="card-text", style={"fontSize": "16px", "textAlign": "center", "marginBottom": "0"})
+                                ], style={"flex": 1})
+                            ], style={"display": "flex", "justifyContent": "space-around", "marginTop": "10px"})
+                        ], style={"display": "flex", "flexDirection": "column", "alignItems": "center", "position": "relative"}),
                     ])
-                ], width=6),
-            ]),
-            dbc.Row([
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardBody([
-                            html.H5("Projeto 123"),
-                            html.Div([
-                                html.P("Realizadas"),
-                                html.P("200"),
-                            ], className="d-flex justify-content-between"),
-                            html.Div([
-                                html.P("Falta"),
-                                html.P("1017"),
-                            ], className="d-flex justify-content-between"),
-                            html.Div([
-                                html.P("Total"),
-                                html.P("1217"),
-                            ], className="d-flex justify-content-between"),
-                            dbc.Progress(value=20, className="mb-3"),
-                        ])
-                    ])
-                ], width=6),
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardBody([
-                            html.H5("Gestão de Metas"),
-                            html.Div([
-                                html.P("Realizadas"),
-                                html.P("0"),
-                            ], className="d-flex justify-content-between"),
-                            html.Div([
-                                html.P("Falta"),
-                                html.P("1217"),
-                            ], className="d-flex justify-content-between"),
-                            html.Div([
-                                html.P("Total"),
-                                html.P("1217"),
-                            ], className="d-flex justify-content-between"),
-                            dbc.Progress(value=0, className="mb-3"),
-                        ])
-                    ])
-                ], width=6),
-            ]),
-        ], width=9),
-    ]),
+                ], style={
+                    "boxShadow": "0 4px 16px 0 rgba(0,0,0,0.15)",
+                    "borderRadius": "12px",
+                    "position": "relative",
+                    "overflow": "hidden",
+                    "width": "100%",
+                    "maxWidth": "600px",
+                    "height": "340px",
+                    "margin": "0 auto"
+                })
+            ], style={"display": "flex", "justifyContent": "center"})
+        ], width=6),
+    ], style={"marginBottom": "32px"}),
     dbc.Row([
         dbc.Col([
             dbc.Card([
@@ -194,7 +171,7 @@ liquidacao_layout = html.Div([
                                     "margin-left": "auto",
                                     "margin-right": "auto",
                                     "display": "block"
-                                })
+                                }, config={"displayModeBar": False})
                             ], className="d-flex align-items-center"),
                         ])
                     ])
@@ -217,7 +194,7 @@ liquidacao_layout = html.Div([
                                     "margin-left": "auto",
                                     "margin-right": "auto",
                                     "display": "block"
-                                })
+                                }, config={"displayModeBar": False})
                             ], className="d-flex align-items-center"),
                         ])
                     ])
@@ -249,99 +226,129 @@ liquidacao_layout = html.Div([
 
 # Tabs com aba base preenchida
 layout = html.Div([
-    html.H1("Cobrança"),
-    dbc.Tabs(
-        [
-            dbc.Tab(
-                html.Div(base_layout),
-                label="Base",
-                tab_id="aba-1",
-                label_style={"color": "#00A091"},
-                active_label_style={"color": "#00A091", "fontWeight": "bold"}),
+    # Linha com título à esquerda e filtros colados ao topo/canto direito
+    dbc.Row([
+        dbc.Col([
+            html.H1("Cobrança", style={"marginBottom": 0, "marginTop": 0})
+        ], width=6, style={"display": "flex", "alignItems": "flex-start", "paddingTop": "0", "paddingBottom": "0"}),
+        dbc.Col([
+            html.Div([
+                dbc.Row([
+                    dbc.Col([
+                        dbc.Label("PA", style={"fontWeight": "bold", "marginBottom": "2px"}),
+                        dbc.Input(id="input-pa", type="text", placeholder="PA", style={"maxWidth": "120px", "height": "32px", "padding": "2px 8px"})
+                    ], width="auto", style={"paddingRight": "8px", "paddingLeft": "0"}),
+                    dbc.Col([
+                        dbc.Label("Ano/mês", style={"fontWeight": "bold", "marginBottom": "2px"}),
+                        dbc.Input(id="input-ano-mes", type="text", placeholder="Ano/mês", style={"maxWidth": "120px", "height": "32px", "padding": "2px 8px"})
+                    ], width="auto", style={"paddingRight": "8px", "paddingLeft": "0"}),
+                    dbc.Col([
+                        dbc.Label("Modalidade", style={"fontWeight": "bold", "marginBottom": "2px"}),
+                        dbc.Input(id="input-modalidade", type="text", placeholder="Modalidade", style={"maxWidth": "120px", "height": "32px", "padding": "2px 8px"})
+                    ], width="auto", style={"paddingRight": "0", "paddingLeft": "0"}),
+                ], justify="end", align="start", style={"gap": "8px", "flexWrap": "nowrap", "marginTop": "0", "marginBottom": "0"})
+            ], style={"display": "flex", "justifyContent": "flex-end", "alignItems": "flex-start", "paddingTop": "0", "paddingBottom": "0"})
+        ], width=6, style={"display": "flex", "alignItems": "flex-start", "justifyContent": "flex-end", "paddingTop": "0", "paddingBottom": "0"})
+    ], style={"marginBottom": "8px", "marginTop": "0", "paddingTop": "0", "paddingBottom": "0"}),
+    html.Hr(style={"marginTop": "0", "marginBottom": "24px"}),
+    # As abas ficam logo abaixo dos filtros
+    html.Div([
+        dbc.Tabs(
+            [
+                dbc.Tab(
+                    html.Div(base_layout),
+                    label="Base",
+                    tab_id="aba-1",
+                    label_style={"color": "#00A091"},
+                    active_label_style={"color": "#00A091", "fontWeight": "bold"}),
 
-            dbc.Tab(html.P(liquidacao_layout), label="Liquidação", tab_id="aba-2",
-                    label_style={"color": "#00A091"}, active_label_style={"color": "#00A091", "fontWeight": "bold"}),
+                dbc.Tab(html.P(liquidacao_layout), label="Liquidação", tab_id="aba-2",
+                        label_style={"color": "#00A091"}, active_label_style={"color": "#00A091", "fontWeight": "bold"}),
 
-            # Aba Resultado com gráficos e tabela
-            dbc.Tab(
-                html.Div([
-                    dbc.Row([
-                        dbc.Col([
-                            dbc.Card([
-                                dbc.CardBody([
-                                    html.H5("Receita dos últimos 12 meses"),
-                                    dcc.Graph(id="grafico-receita-12m")
+                # Aba Resultado com gráficos e tabela
+                dbc.Tab(
+                    html.Div([
+                        dbc.Row([
+                            dbc.Col([
+                                dbc.Card([
+                                    dbc.CardBody([
+                                        html.H5("Receita dos últimos 12 meses"),
+                                        dcc.Graph(id="grafico-receita-12m")
+                                    ])
                                 ])
-                            ])
-                        ], width=6),
-                        dbc.Col([
-                            dbc.Card([
-                                dbc.CardBody([
-                                    html.H5("Despesa dos últimos 12 meses"),
-                                    dcc.Graph(id="grafico-despesa-12m")
+                            ], width=6),
+                            dbc.Col([
+                                dbc.Card([
+                                    dbc.CardBody([
+                                        html.H5("Despesa dos últimos 12 meses"),
+                                        dcc.Graph(id="grafico-despesa-12m")
+                                    ])
                                 ])
-                            ])
-                        ], width=6),
+                            ], width=6),
+                        ]),
+                        dbc.Row([
+                            dbc.Col([
+                                dbc.Card([
+                                    dbc.CardBody([
+                                        html.H5("Resultado dos últimos 12 meses"),
+                                        dcc.Graph(id="grafico-resultado-12m")
+                                    ])
+                                ])
+                            ], width=12),
+                        ]),
+                        dbc.Row([
+                            dbc.Col([
+                                dbc.Card([
+                                    dbc.CardBody([
+                                        html.H5("Evolução Receita e Despesa (MoM/YoY)"),
+                                        html.Div(id="tabela-evolucao-receita-despesa")
+                                    ])
+                                ])
+                            ], width=12),
+                        ]),
                     ]),
-                    dbc.Row([
-                        dbc.Col([
-                            dbc.Card([
-                                dbc.CardBody([
-                                    html.H5("Resultado dos últimos 12 meses"),
-                                    dcc.Graph(id="grafico-resultado-12m")
-                                ])
-                            ])
-                        ], width=12),
-                    ]),
-                    dbc.Row([
-                        dbc.Col([
-                            dbc.Card([
-                                dbc.CardBody([
-                                    html.H5("Evolução Receita e Despesa (MoM/YoY)"),
-                                    html.Div(id="tabela-evolucao-receita-despesa")
-                                ])
-                            ])
-                        ], width=12),
-                    ]),
-                ]),
-                label="Resultado",
-                tab_id="aba-3",
-                label_style={"color": "#00A091"},
-                active_label_style={"color": "#00A091", "fontWeight": "bold"}
-            ),
+                    label="Resultado",
+                    tab_id="aba-3",
+                    label_style={"color": "#00A091"},
+                    active_label_style={"color": "#00A091", "fontWeight": "bold"}
+                ),
 
-            # Aba Ranking com dois rankings em tabelas
-            dbc.Tab(
-                html.Div([
-                    dbc.Row([
-                        dbc.Col([
-                            dbc.Card([
-                                dbc.CardBody([
-                                    html.H5("Cooperados com Contrato Ativo"),
-                                    html.Div(id="tabela-ranking-contrato-ativo")
+                # Aba Ranking com dois rankings em tabelas
+                dbc.Tab(
+                    html.Div([
+                        dbc.Row([
+                            dbc.Col([
+                                dbc.Card([
+                                    dbc.CardBody([
+                                        html.H5("Cooperados com Contrato Ativo"),
+                                        html.Div(id="tabela-ranking-contrato-ativo")
+                                    ])
                                 ])
-                            ])
-                        ], width=6),
-                        dbc.Col([
-                            dbc.Card([
-                                dbc.CardBody([
-                                    html.H5("Contatos Ativos por Qtd. de Boletos"),
-                                    html.Div(id="tabela-ranking-boletos")
+                            ], width=6),
+                            dbc.Col([
+                                dbc.Card([
+                                    dbc.CardBody([
+                                        html.H5("Contatos Ativos por Qtd. de Boletos"),
+                                        html.Div(id="tabela-ranking-boletos")
+                                    ])
                                 ])
-                            ])
-                        ], width=6),
+                            ], width=6),
+                        ]),
                     ]),
-                ]),
-                label="Ranking",
-                tab_id="aba-4",
-                label_style={"color": "#00A091"},
-                active_label_style={"color": "#00A091", "fontWeight": "bold"}
-            ),
+                    label="Ranking",
+                    tab_id="aba-4",
+                    label_style={"color": "#00A091"},
+                    active_label_style={"color": "#00A091", "fontWeight": "bold"}
+                ),
 
-            dbc.Tab(html.P("Aba 6 aberta!"), label="Propensos", tab_id="aba-6",
-                    label_style={"color": "#00A091"}, active_label_style={"color": "#00A091", "fontWeight": "bold"}),
-        ],
-        id="tabs",
-        active_tab="aba-1",
-    )
+                dbc.Tab(html.P("Aba 6 aberta!"), label="Propensos", tab_id="aba-6",
+                        label_style={"color": "#00A091"}, active_label_style={"color": "#00A091", "fontWeight": "bold"}),
+            ],
+            id="tabs",
+            active_tab="aba-1",
+        ),
+        # Espaço entre as abas e a primeira linha
+        html.Div(style={"marginBottom": "32px"}),
+    ]),
+    # O conteúdo principal já está dentro das abas
 ])
